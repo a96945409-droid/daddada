@@ -21,14 +21,16 @@
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   color-scheme:dark;
 }
-html,body{height:100%}
+html,body{height:100%;overflow:hidden}
+*{-webkit-touch-callout:none}
+svg,canvas,img{-webkit-user-drag:none}
 body{margin:0;background:var(--night);color:var(--text);font-family:var(--f-ui);font-size:14px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-  -webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+  -webkit-tap-highlight-color:transparent;overscroll-behavior:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 button{font:inherit}
 [hidden]{display:none!important}
 .disp{font-family:var(--f-display)} .ui{font-family:var(--f-ui)} .mono{font-family:var(--f-mono)} .hand{font-family:var(--f-hand)}
-#app{max-width:600px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;gap:8px;padding-block:8px;box-sizing:border-box}
+#app{max-width:600px;margin:0 auto;height:100%;display:flex;flex-direction:column;gap:8px;padding-block:8px;box-sizing:border-box}
 .bar{display:flex;align-items:center;gap:6px}
 .bar h1{font-family:var(--f-display);font-weight:800;font-size:17px;letter-spacing:.08em;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .timer{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--brass-hi);font-size:14px;padding-inline:4px}
@@ -203,13 +205,18 @@ button{font:inherit}
 .kbtns{display:flex;gap:2cqw}
 .khelp{margin:0;font-size:3.1cqw;color:#cdbf98;line-height:1.4}
 
-.cover{position:fixed;inset:0;z-index:40;background:#081014;overflow:auto;display:flex;flex-direction:column}
-.cover-art{position:relative;height:min(44vh,320px);flex:0 0 auto;overflow:hidden}
+.cover{position:fixed;inset:0;z-index:40;background:#081014;overflow:hidden;display:flex;flex-direction:column}
+.cover-art{position:relative;height:min(38vh,320px);flex:0 0 auto;overflow:hidden}
+@supports (height:100dvh){.cover-art{height:min(38dvh,320px)}}
+.cover.noart .cover-art{display:none}
+.cpage{animation:cin .45s ease both}
+@keyframes cin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.ch3{font-family:var(--f-display);font-weight:800;font-size:24px;letter-spacing:.1em;margin:0 0 12px}
 .cover-art svg{position:absolute;inset:0;width:100%;height:100%}
-.cover-body{max-width:600px;margin:0 auto;padding-block:8px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box;width:100%}
+.cover-body{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;max-width:600px;margin:0 auto;padding-block:12px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box;width:100%}
 .eyebrow{font-size:12px;letter-spacing:.18em;color:var(--brass-hi);margin:0 0 6px}
-.cover h2{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,10vw,54px);letter-spacing:.14em;margin:0 0 14px;line-height:1.15;text-wrap:balance}
-.lead{font-family:var(--f-display);font-size:16px;line-height:2;color:#dcd5c4;margin:0 0 20px;max-width:34em}
+.cover h2{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,9.5vw,54px);letter-spacing:.14em;margin:0 0 14px;line-height:1.15;text-wrap:balance}
+.lead{font-family:var(--f-display);font-size:clamp(14px,3.9vw,16px);line-height:1.95;color:#dcd5c4;margin:0 0 20px;max-width:34em}
 .cover-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .btn.big{font-size:16px;padding:12px 22px;min-height:48px;letter-spacing:.1em}
 .howto{border-top:1px solid var(--line);padding-top:12px;color:#cfc8b8;font-size:13.5px}
@@ -222,6 +229,25 @@ button{font:inherit}
 .stat small{display:block;font-size:11px;color:var(--muted);letter-spacing:.1em}
 .stat b{font-family:var(--f-mono);font-size:18px;color:var(--brass-hi);font-variant-numeric:tabular-nums}
 .stat b.k{font-family:var(--f-display);font-size:16px}
+.pad{display:none;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px 4px;flex:0 0 auto}
+.lever{position:relative;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle,#1f2a2e,#11181b);border:1px solid #3a4a50;touch-action:none;box-shadow:inset 0 2px 12px rgba(0,0,0,.6);flex:0 0 auto;transition:opacity .2s}
+.lever::before{content:"";position:absolute;inset:16%;border-radius:50%;border:1px dashed rgba(231,201,127,.28)}
+.lever::after{content:"▲\A◀　▶\A▼";white-space:pre;position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:9px;line-height:2.6;color:rgba(231,201,127,.3);pointer-events:none}
+.lknob{position:absolute;left:30%;top:30%;width:40%;height:40%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#f1d99a,#a8842f);box-shadow:0 3px 8px rgba(0,0,0,.55);transition:transform .12s;z-index:1}
+.lknob.drag{transition:none}
+.lever.off{opacity:.3}
+.padmid{flex:1;text-align:center;font-size:11px;color:var(--muted);letter-spacing:.06em;line-height:1.5;min-width:0}
+.act{appearance:none;width:98px;height:98px;flex:0 0 auto;border-radius:50%;border:2px solid #7d6430;background:radial-gradient(circle at 45% 35%,#4a3c22,#241e14);color:var(--brass-hi);font-family:var(--f-display);font-weight:800;font-size:17px;letter-spacing:.1em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;touch-action:manipulation;box-shadow:0 4px 0 #15110a;cursor:pointer;padding:0}
+.act:active{transform:translateY(3px);box-shadow:0 1px 0 #15110a}
+.act small{font-family:var(--f-ui);font-weight:400;font-size:10px;letter-spacing:0;color:#d8c9a0;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:1.2em}
+.act.on{border-color:var(--brass-hi);box-shadow:0 4px 0 #15110a,0 0 18px rgba(231,201,127,.35)}
+@media (pointer:coarse){
+  .pad{display:flex}
+  #joy{display:none!important}
+  .stage{width:min(100%,600px,max(220px,calc(100vh - 366px)))}
+  @supports (height:100dvh){.stage{width:min(100%,600px,max(220px,calc(100dvh - 366px)))}}
+  .selbar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 .epi{border-left:2px solid var(--brass);padding:4px 0 4px 14px;font-family:var(--f-display);line-height:2;color:#e8dcc0;margin:0 0 20px}
 </style>
 </head>
@@ -276,6 +302,7 @@ button{font:inherit}
   <div class="msg" id="msg" aria-live="polite"></div>
   <div class="inv" id="inv" aria-label="持ち物"></div>
   <div class="selbar" id="selbar"></div>
+  <div class="pad" id="pad"><div class="lever" id="lever" aria-label="移動レバー"><div class="lknob" id="lknob"></div></div><div class="padmid" id="padHint">画面をドラッグして見回す</div><button class="act" id="actBtn"><span id="actMain">調べる</span><small id="actLbl"></small></button></div>
 </div>
 
 <div id="modal" hidden></div>
@@ -706,12 +733,13 @@ function compass(){const d=((-S.cam.yaw*180/Math.PI)%360+360)%360;return['北','
 function render(){if(!SC[S.view])S.view='3d';const sc=SC[S.view],is3=S.view==='3d';
  stage.classList.toggle('mode3d',is3);stage.classList.toggle('dark',!is3&&isDark());
  $('#c3d').style.visibility=is3?'visible':'hidden';$('#joy').hidden=!is3||!!T3.ending;$('#reticle').hidden=!is3||!!T3.ending;
- const tip=$('#tip');tip.hidden=!is3||!!F().movedOnce;tip.textContent=FINE?'WASD・矢印キーで歩く／ドラッグで見回す／クリックで調べる':'スティックで歩く／ドラッグで見回す／タップで調べる';
+ const tip=$('#tip');tip.hidden=!is3||!!F().movedOnce;tip.textContent=FINE?'WASD・矢印キーで歩く／ドラッグで見回す／クリックで調べる':'レバーで歩く／ドラッグで見回す／調べるボタン';
  if(is3){$('#scene').innerHTML='';$('#lum').innerHTML='';$('#htmlview').hidden=true;$('#htmlview').innerHTML='';start3D()}
  else{stop3D();if(sc.html){$('#scene').innerHTML='';$('#lum').innerHTML='';$('#htmlview').hidden=false;mountRadio()}
   else{$('#htmlview').hidden=true;$('#htmlview').innerHTML='';$('#scene').innerHTML=sc.svg();$('#lum').innerHTML=sc.lum?sc.lum():''}}
  $('#vlabel').textContent=is3?`観測室　${compass()}`:sc.label;$('#back').hidden=is3;
  const c=$('#ctrls');if(S.view==='clock'&&!F().clockOpen){c.hidden=false;c.innerHTML=`<span>短針</span><button class="rb" data-ck="h-1" aria-label="短針を戻す">◀</button><button class="rb" data-ck="h1" aria-label="短針を進める">▶</button><span class="sep"></span><span>長針</span><button class="rb" data-ck="m-1" aria-label="長針を戻す">◀</button><button class="rb" data-ck="m1" aria-label="長針を進める">▶</button>`}else{c.hidden=true;c.innerHTML=''}
+ $('#actMain').textContent=is3?'調べる':'戻る';if(!is3){$('#actLbl').textContent='';$('#actBtn').classList.add('on')}else $('#actBtn').classList.remove('on');$('#lever').classList.toggle('off',!is3);$('#padHint').textContent=is3?'画面をドラッグして見回す':'画面をタップして調べる';
  updateBeam();renderInv();
  if(!is3&&isDark()&&S.view==='clock'&&!F().ghostSeen){F().ghostSeen=1;say('闇の中、掛け時計の文字盤に<b>緑色の線が二本</b>、ぼうっと浮かんでいる。');save()}}
 function updateBeam(){stage.classList.toggle('beam',S.view!=='3d'&&isDark()&&S.sel==='torch')}
@@ -988,7 +1016,7 @@ function openHints(){const draw=()=>{const list=HINTS.filter(h=>h.show()&&!h.don
  ${list.map(h=>{const n=S.hints[h.id]||0;return `<div class="hint"><h4>${h.t}</h4>${n?`<ol>${h.h.slice(0,n).map(x=>`<li>${x}</li>`).join('')}</ol>`:''}${n<3?`<button class="btn ${n===2?'':'brass'}" data-hint="${h.id}">${n===2?'答えを見る':`ヒント${n+1}を見る`}</button>`:''}</div>`}).join('')||'<p>いま見られるヒントはありません。</p>'}</div>`,e=>{const b=e.target.closest('[data-hint]');if(!b)return;S.hints[b.dataset.hint]=(S.hints[b.dataset.hint]||0)+1;S.hintsUsed++;save();draw()})};draw()}
 $('#bHint').addEventListener('click',()=>{audioInit();openHints()});
 $('#bSound').addEventListener('click',()=>{audioInit();setSound(!S.sound)});
-const HOWTO=`<ul><li>${FINE?'WASD か矢印キーで歩き、ドラッグで見回す。気になる物をクリックして調べる。':'左下のスティックで歩き、画面をドラッグして見回す。気になる物をタップして調べる。'}</li><li>近くの物に視線を合わせると、画面中央に名前が出る。</li><li>拡大した画面は右上の「戻る」で部屋に戻る。</li><li>持ち物はタップで選択、もう一度タップで詳しく見る。選んだまま別の持ち物をタップで組み合わせ、部屋の物をタップで使う。</li><li>進み具合はこの端末に自動で保存される。</li></ul>`;
+const HOWTO=`<ul><li>${FINE?'WASD か矢印キーで歩き、ドラッグで見回す。気になる物をクリックして調べる。':'画面下の左のレバーで歩き、画面をドラッグして見回す。'}</li>${FINE?'':'<li>調べたい物を画面中央の照準に合わせて、右下の「調べる」ボタンを押す（物を直接タップしてもよい）。</li>'}<li>近くの物に視線を合わせると、画面中央に名前が出る。</li><li>拡大した画面は「戻る」で部屋に戻る。</li><li>持ち物はタップで選択、もう一度タップで詳しく見る。選んだまま別の持ち物をタップで組み合わせ、部屋の物をタップで使う。</li><li>進み具合はこの端末に自動で保存される。</li></ul>`;
 $('#bMenu').addEventListener('click',()=>{let confirmReset=false;const draw=()=>{const n=Object.keys(S.frags).length;modalOpen(`<div class="card"><div class="doc-head"><h3>メニュー</h3><button class="x" data-close>閉じる</button></div>
  <h4 style="margin:0 0 4px;font-family:var(--f-display)">斎木の記録　${n} / 5</h4><p class="sub" style="margin:0">部屋のどこかに、五枚の紙切れが隠れている。</p>
  <div class="frags">${[1,2,3,4,5].map(i=>`<button data-frag="${i}" ${S.frags[i]?'':'disabled'}>${S.frags[i]?FRAG_TEXT[i][0]:'？'}</button>`).join('')}</div>
@@ -1004,39 +1032,42 @@ setInterval(()=>{const n=performance.now();if(S.started&&!S.done&&!document.hidd
 
 /* ---------- cover / ending ---------- */
 const COVER_ART=$('#cover .cover-art').innerHTML;
-function showCover(){const sv=loadSave();const cont=sv&&sv.started&&!sv.done;const best=getBest();
- $('#cover .cover-art').innerHTML=COVER_ART;
- $('#coverBody').innerHTML=`<p class="eyebrow">一人称3D脱出ゲーム　難易度 ★★★★☆　めやす 30〜45分</p><h2>霧笛島測候所</h2>
- <p class="lead">昭和四十三年十月十八日、夜。<br>台風の迫る霧笛島に、あなたは後任の観測員として着任した。<br>観測室の鉄の扉は、外の灯台からしか開かない仕掛けになっている。<br>前任の斎木は、もうここにはいない。</p>
- <div class="cover-actions">${cont?`<button class="btn brass big" id="bCont">つづきから（${fmt(sv.elapsed)}）</button><button class="btn big" id="bNew">はじめから</button>`:'<button class="btn brass big" id="bNew">はじめる</button>'}</div>
- ${best?`<p class="sub">これまでの最速：${fmt(best.t)}（ヒント ${best.h} 回・記録 ${best.f}/5）</p>`:''}
- <details class="howto" open><summary>遊び方</summary>${HOWTO}<ul><li>行き詰まったら右上の「ヒント」。三段階で、最後は答え。</li><li>音が出ます（モールス信号も聞こえます）。紙とペンがあると便利。</li><li>部屋には斎木の記録が五枚隠れている。すべて集めると、結末が少し変わる。</li></ul></details>`;
- $('#cover').hidden=false;$('#cover').scrollTop=0;
- $('#bNew').addEventListener('click',()=>{audioInit();newGame()});
- if(cont)$('#bCont').addEventListener('click',()=>{audioInit();S=sv;begin(false)})}
+function coverPage(html,noart){$('#cover').classList.toggle('noart',!!noart);const b=$('#coverBody');b.innerHTML=`<div class="cpage">${html}</div>`;b.scrollTop=0}
+const HOWTO_MORE='<ul><li>行き詰まったら右上の「ヒント」。三段階で、最後は答え。</li><li>音が出ます（モールス信号も聞こえます）。紙とペンがあると便利。</li><li>部屋には斎木の記録が五枚隠れている。すべて集めると、結末が少し変わる。</li></ul>';
+function showCover(page){const sv=loadSave();const cont=sv&&sv.started&&!sv.done;const best=getBest();
+ $('#cover .cover-art').innerHTML=COVER_ART;$('#cover').hidden=false;
+ if(page==='howto'){coverPage(`<p class="eyebrow">遊び方</p><h3 class="ch3">観測室の歩き方</h3><div class="howto" style="border:0;padding:0">${HOWTO}${HOWTO_MORE}</div><div class="cover-actions" style="margin-top:12px"><button class="btn brass big" data-cv="title">もどる</button></div>`,true);return}
+ coverPage(`<p class="eyebrow">一人称3D脱出ゲーム　難易度 ★★★★☆　めやす 30〜45分</p><h2>霧笛島測候所</h2>
+ <p class="lead">昭和四十三年十月十八日、夜。<br>台風の迫る霧笛島に、後任の観測員として着任した。<br>観測室の扉は、外の灯台からしか開かない。</p>
+ <div class="cover-actions">${cont?`<button class="btn brass big" data-cv="cont">つづきから（${fmt(sv.elapsed)}）</button><button class="btn big" data-cv="new">はじめから</button>`:'<button class="btn brass big" data-cv="new">はじめる</button>'}<button class="btn big" data-cv="howto">遊び方</button></div>
+ ${best?`<p class="sub">これまでの最速：${fmt(best.t)}（ヒント ${best.h} 回・記録 ${best.f}/5）</p>`:''}`)}
+$('#coverBody').addEventListener('click',e=>{const b=e.target.closest('[data-cv]');if(!b)return;audioInit();tick();const v=b.dataset.cv;
+ if(v==='new')newGame();else if(v==='cont'){const sv=loadSave();if(sv){S=sv;begin(false)}else newGame()}
+ else if(v==='title')showCover();else if(v==='howto')showCover('howto');
+ else if(v==='end2')endPage(2);else if(v==='end3')endPage(3);
+ else if(v==='again'){const snd=S.sound;S=fresh();S.sound=snd;save();T3.ending=0;$('#fade').style.opacity=0;END=null;showCover()}});
 function newGame(){const snd=S.sound;S=fresh();S.sound=snd;T3.ending=0;$('#fade').style.opacity=0;T3.sig={};begin(true)}
 function begin(isNew){S.started=true;$('#cover').hidden=true;setSound(S.sound);lastT=performance.now();T3.wasLit=isLit();render();save();
  say(isNew?'……扉の閉まる重い音で、我に返った。観測室には誰もいない。外は嵐だ。机の上に、手紙が置いてある。':'観測室に戻ってきた。外はまだ嵐だ。');
  scheduleFlash(3000)}
 function ending(){if(T3.ending||S.done)return;S.done=true;save();modalClose();if(S.view!=='3d')go('3d');creak();T3.ending=performance.now();$('#joy').hidden=true;$('#reticle').hidden=true;$('#tip').hidden=true;
  say('鉄の扉を押すと、重い蝶番がゆっくりと回った。');setTimeout(showEnding,4300)}
-function showEnding(){const t=S.elapsed,hu=S.hintsUsed,fr=Object.keys(S.frags).length;
- const rank=hu===0&&t<=30*60000?'一等観測員':hu===0?'観測員':hu<=4?'観測員見習い':'新任観測員';
- const best=getBest();let newBest=false;if(!best||t<best.t){setBest({t,h:hu,f:fr});newBest=true}
- $('#cover .cover-art').innerHTML=`<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="dSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2a40"/><stop offset=".55" stop-color="#7b6a7a"/><stop offset=".8" stop-color="#e3a46a"/><stop offset="1" stop-color="#f6d49a"/></linearGradient><linearGradient id="dSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7e6f78"/><stop offset="1" stop-color="#1d2733"/></linearGradient></defs>
+const DAWN_ART=`<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="dSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2a40"/><stop offset=".55" stop-color="#7b6a7a"/><stop offset=".8" stop-color="#e3a46a"/><stop offset="1" stop-color="#f6d49a"/></linearGradient><linearGradient id="dSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7e6f78"/><stop offset="1" stop-color="#1d2733"/></linearGradient></defs>
  <rect width="400" height="240" fill="url(#dSky)"/><circle cx="270" cy="178" r="22" fill="#fff0c8" opacity=".9"/><path d="M-10 70 Q60 50 120 66 T260 60 T420 72" stroke="#cfa9a0" stroke-width="10" fill="none" opacity=".35"/>
  <rect y="176" width="400" height="64" fill="url(#dSea)"/><path d="M200 182 h140 M220 192 h100 M240 204 h70" stroke="#ffe3b0" stroke-width="2" opacity=".6"/>
  <path d="M250 178 Q300 150 360 152 Q390 156 410 178Z" fill="#141c24"/><path d="M326 152 L329 124 L337 124 L340 152Z" fill="#e8e0cc"/><rect x="327" y="118" width="12" height="6" fill="#2a2a2a"/><circle cx="333" cy="121" r="3" fill="#fff"/>
  <path d="M342 116 l3 -3 l3 3" stroke="#141c24" fill="none"/><line x1="345" y1="113" x2="345" y2="124" stroke="#141c24"/>
  <path d="M-10 182 Q40 150 90 146 L120 148 Q150 160 170 182Z" fill="#141c24"/><rect x="62" y="128" width="40" height="22" fill="#141c24"/><path d="M58 130 L82 116 L106 130Z" fill="#141c24"/><rect x="88" y="136" width="9" height="14" fill="#f3c46a"/>
  <path d="M150 60 q6 -5 12 0 q6 -5 12 0 M190 44 q5 -4 10 0 q5 -4 10 0" stroke="#2a2a38" fill="none" stroke-width="1.5"/></svg>`;
- $('#coverBody').innerHTML=`<p class="eyebrow">脱出成功${newBest?'　最速記録を更新':''}</p><h2>夜明け</h2>
- <p class="lead">鉄の扉を押し開けると、嵐は峠を越えていた。<br>東の空がわずかに白み、霧笛が三度、長く鳴る。<br>岬の灯台の上で、誰かがこちらへ手を振っていた。</p>
- ${fr===5?`<p class="epi">灯台の螺旋階段を降りてきた斎木は、黙って君の観測手帳を受け取り、最後の頁に一行だけ書き足した。<br>――十月十八日二十一時　霧笛島　南南西の風　よく観測した。</p>`:`<p class="sub">斎木の記録 ${fr}/5。すべて集めると、もうひとつの結末が読める。</p>`}
- <div class="stats"><div class="stat"><small>脱出時間</small><b>${fmt(t)}</b></div><div class="stat"><small>ヒント</small><b>${hu} 回</b></div><div class="stat"><small>斎木の記録</small><b>${fr} / 5</b></div><div class="stat"><small>称号</small><b class="k">${rank}</b></div></div>
- <div class="cover-actions"><button class="btn brass big" id="bAgain">もう一度遊ぶ</button></div>`;
- $('#cover').hidden=false;$('#cover').scrollTop=0;stop3D();
- $('#bAgain').addEventListener('click',()=>{const snd=S.sound;S=fresh();S.sound=snd;save();T3.ending=0;$('#fade').style.opacity=0;showCover()})}
+let END=null;
+function showEnding(){const t=S.elapsed,hu=S.hintsUsed,fr=Object.keys(S.frags).length;
+ const rank=hu===0&&t<=30*60000?'一等観測員':hu===0?'観測員':hu<=4?'観測員見習い':'新任観測員';
+ const best=getBest();let newBest=false;if(!best||t<best.t){setBest({t,h:hu,f:fr});newBest=true}
+ END={t,hu,fr,rank,newBest};$('#cover .cover-art').innerHTML=DAWN_ART;$('#cover').hidden=false;stop3D();endPage(1)}
+function endPage(n){const E=END;if(!E)return;
+ if(n===1)coverPage(`<p class="eyebrow">脱出成功${E.newBest?'　最速記録を更新':''}</p><h2>夜明け</h2><p class="lead">鉄の扉を押し開けると、嵐は峠を越えていた。<br>東の空がわずかに白み、霧笛が三度、長く鳴る。<br>岬の灯台の上で、誰かがこちらへ手を振っていた。</p><div class="cover-actions"><button class="btn brass big" data-cv="end2">つづきを読む</button></div>`);
+ else if(n===2)coverPage(E.fr===5?`<p class="eyebrow">斎木の記録　5 / 5</p><p class="epi">灯台の螺旋階段を降りてきた斎木は、黙って君の観測手帳を受け取り、最後の頁に一行だけ書き足した。<br>――十月十八日二十一時　霧笛島　南南西の風　よく観測した。</p><div class="cover-actions"><button class="btn brass big" data-cv="end3">成績を見る</button></div>`:`<p class="eyebrow">斎木の記録　${E.fr} / 5</p><p class="lead">部屋には、まだ読んでいない斎木の記録が残っている。<br>五枚すべて集めると、もうひとつの結末が読める。</p><div class="cover-actions"><button class="btn brass big" data-cv="end3">成績を見る</button></div>`);
+ else coverPage(`<p class="eyebrow">観測記録</p><h3 class="ch3">今回の成績</h3><div class="stats"><div class="stat"><small>脱出時間</small><b>${fmt(E.t)}</b></div><div class="stat"><small>ヒント</small><b>${E.hu} 回</b></div><div class="stat"><small>斎木の記録</small><b>${E.fr} / 5</b></div><div class="stat"><small>称号</small><b class="k">${E.rank}</b></div></div><div class="cover-actions"><button class="btn brass big" data-cv="again">もう一度遊ぶ</button></div>`,true)}
 
 
 /* ===================== 3D ===================== */
@@ -1279,7 +1310,7 @@ function update3D(dt,now){const c=S.cam,f=F(),m=T3.m,t=now/1000,PI=Math.PI;
  for(let i=T3.anims.length-1;i>=0;i--){const a=T3.anims[i],k=Math.min(1,(now-a.t0)/450);a.o.position.y=a.y0+.14*k;a.o.scale.setScalar(Math.max(.001,a.s0*(1-k)));if(k>=1){a.o.visible=false;a.o.scale.setScalar(a.s0);a.o.position.y=a.y0;a.o.userData.flying=0;T3.anims.splice(i,1)}}
  if(A.hum){A.hum.gain.setTargetAtTime(S.main?.018:0,A.ctx.currentTime,.3);A.hiss.gain.setTargetAtTime(T3.heat*.02,A.ctx.currentTime,.3)}
  // reticle & discoveries
- if(now-T3.lastPick>130&&!T3.ending){T3.lastPick=now;const h=pick(0,0);const id=h&&h.object.userData.hs&&h.distance<=REACH?h.object.userData.hs:'';const lab=NAME[id]||'';const rl=$('#rlabel');if(rl.textContent!==lab)rl.textContent=lab;$('#reticle').classList.toggle('on',!!lab);
+ if(now-T3.lastPick>130&&!T3.ending){T3.lastPick=now;const h=pick(0,0);const id=h&&h.object.userData.hs&&h.distance<=REACH?h.object.userData.hs:'';const lab=NAME[id]||'';const rl=$('#rlabel');if(rl.textContent!==lab)rl.textContent=lab;const al=$('#actLbl');if(al.textContent!==lab){al.textContent=lab;$('#actBtn').classList.toggle('on',!!lab)}$('#reticle').classList.toggle('on',!!lab);
   const vl=$('#vlabel'),cl=`観測室　${compass()}`;if(vl.textContent!==cl)vl.textContent=cl;
   if(L<.25){const fw=new THREE.Vector3();T3.cam.getWorldDirection(fw);const seen=(x,y,z,md,cs)=>{const v=new THREE.Vector3(x-c.x,y-1.56,z-c.z),d=v.length();return d<md&&v.normalize().dot(fw)>cs};
    if(!f.ghostSeen&&seen(2.8,1.92,-1.5,4.4,.9)){f.ghostSeen=1;say('闇の中、掛け時計の文字盤に<b>緑色の線が二本</b>、ぼうっと浮かんでいる。');save()}
@@ -1288,11 +1319,15 @@ function pick(nx,ny){T3.ray.setFromCamera({x:nx,y:ny},T3.cam);const hits=T3.ray.
 function tap3D(e){if(T3.ending)return;const r=$('#c3d').getBoundingClientRect();const h=pick(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);if(!h)return;const id=h.object.userData.hs;if(!id)return;
  if(h.distance>REACH){say(`${NAME[id]||'それ'}だ。もう少し近づこう。`);return}tick();ACT[id]&&ACT[id]()}
 const J={id:null,x:0,y:0,cx:0,cy:0,r:1},LK={id:null,x:0,y:0,t:0,moved:0};
-function bind3DControls(){const joy=$('#joy'),knob=$('#knob'),cv=$('#c3d');
- const jm=e=>{let dx=e.clientX-J.cx,dy=e.clientY-J.cy;const d=Math.hypot(dx,dy),mx=J.r*.72;if(d>mx){dx*=mx/d;dy*=mx/d}J.x=dx/mx;J.y=dy/mx;knob.style.transform=`translate(${dx}px,${dy}px)`};
- joy.addEventListener('pointerdown',e=>{e.preventDefault();audioInit();J.id=e.pointerId;joy.setPointerCapture(e.pointerId);const r=joy.getBoundingClientRect();J.cx=r.left+r.width/2;J.cy=r.top+r.height/2;J.r=r.width/2;jm(e)});
- joy.addEventListener('pointermove',e=>{if(e.pointerId===J.id)jm(e)});
- const je=e=>{if(e.pointerId!==J.id)return;J.id=null;J.x=J.y=0;knob.style.transform=''};joy.addEventListener('pointerup',je);joy.addEventListener('pointercancel',je);
+function bindStick(el,knob){const st={id:null,cx:0,cy:0,r:1};
+ const jm=e=>{let dx=e.clientX-st.cx,dy=e.clientY-st.cy;const d=Math.hypot(dx,dy),mx=st.r*.72;if(d>mx){dx*=mx/d;dy*=mx/d}J.x=dx/mx;J.y=dy/mx;knob.style.transform=`translate(${dx}px,${dy}px)`};
+ el.addEventListener('pointerdown',e=>{e.preventDefault();audioInit();if(S.view!=='3d'||T3.ending)return;st.id=e.pointerId;try{el.setPointerCapture(e.pointerId)}catch(_){}const r=el.getBoundingClientRect();st.cx=r.left+r.width/2;st.cy=r.top+r.height/2;st.r=r.width/2;knob.classList.add('drag');jm(e)});
+ el.addEventListener('pointermove',e=>{if(e.pointerId===st.id)jm(e)});
+ const je=e=>{if(e.pointerId!==st.id)return;st.id=null;J.x=J.y=0;knob.style.transform='';knob.classList.remove('drag')};el.addEventListener('pointerup',je);el.addEventListener('pointercancel',je);el.addEventListener('contextmenu',e=>e.preventDefault())}
+function bind3DControls(){const cv=$('#c3d');bindStick($('#joy'),$('#knob'));bindStick($('#lever'),$('#lknob'));
+ $('#actBtn').addEventListener('click',()=>{audioInit();if(S.view!=='3d'){const p=SC[S.view]&&SC[S.view].parent;if(p){tick();go(p)}return}if(T3.ending||!T3.ready)return;
+  const h=pick(0,0);const id=h&&h.object.userData.hs;if(!id){say('照準の先に、調べられる物はないようだ。');return}if(h.distance>REACH){say(`${NAME[id]||'それ'}だ。もう少し近づこう。`);return}tick();ACT[id]&&ACT[id]()});
+ document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('selectstart',e=>e.preventDefault());document.addEventListener('dragstart',e=>e.preventDefault());
  cv.addEventListener('pointerdown',e=>{audioInit();if(LK.id!==null)return;LK.id=e.pointerId;try{cv.setPointerCapture(e.pointerId)}catch(_){}LK.x=e.clientX;LK.y=e.clientY;LK.t=performance.now();LK.moved=0});
  cv.addEventListener('pointermove',e=>{if(e.pointerId!==LK.id)return;const dx=e.clientX-LK.x,dy=e.clientY-LK.y;LK.x=e.clientX;LK.y=e.clientY;LK.moved+=Math.abs(dx)+Math.abs(dy);if(T3.ending)return;
   const k=2.6/Math.max(320,cv.clientWidth);S.cam.yaw-=dx*k;S.cam.pitch=Math.max(-1.25,Math.min(1.15,S.cam.pitch-dy*k));if(LK.moved>40)markMoved()});
